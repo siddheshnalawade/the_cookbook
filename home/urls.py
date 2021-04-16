@@ -10,9 +10,10 @@ urlpatterns = [
     path('search',views.search,name="search"),
     path('signUp',views.userSignUp,name="signUp"),
     path('login',views.userLogin,name="login"),
-    path('logout',views.userLogout,name="logout"),
+    path('logout/',views.userLogout,name="logout"),
     path('writeblog',views.writeBlog,name="writeblog"),
     path('myposts',views.myposts,name="myposts"),
+    path('changepassword',views.changepassword,name="changepassword"),
     path('myposts/<int:sno>/delete',views.deletepost,name="deletepost"),
     path('myposts/<int:sno>/update',views.updatepost,name="updatepost"),
     

@@ -5,6 +5,10 @@ from django.contrib import messages
 from blog import models
 from django.contrib.auth import login, logout, authenticate
 import pyrebase
+from django.contrib.auth.hashers import check_password
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
 
 # Create your views here.
 
@@ -58,7 +62,7 @@ def search(request):
         postContent = models.Post.objects.filter(content__icontains=query)
         posts = postsTitle.union(postContent)  
     if posts.count() == 0:
-        messages.warning(request,"Please refine your query")
+        messages.warning(request,"Please refine your query,enter valid keywords.")
     context = {'posts':posts,
                'query':query}
     return render(request,'home/search.html', context)
@@ -78,12 +82,20 @@ def userSignUp(request):
        if User.objects.filter(email=email).first() is not None:
            messages.success(request,'This email has already taken please try another one.')
            return redirect('home')
+       if len(password)<8 or len(username)<8:
+           messages.success(request,'Username and Password must have atleast 8 characters.')
+           return redirect('home')
+       try:
+            validate_email(email)
+       except ValidationError as e:
+           messages.success(request,"bad email, details.Please enter valid email address.")
+           return redirect('home')
        try:
            myuser = User.objects.create_user(username,email,password)
            myuser.first_name = fname
            myuser.last_name = lname
            myuser.save()
-           messages.success(request,"Account has been created successfully.")
+           messages.success(request,"Account has been created successfully.Please login to share your recipes.")
            return redirect('home')
        except Exception as e:
            messages.success(request,'This username has already taken please try another one.',e)
@@ -101,10 +113,10 @@ def userLogin(request):
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request, user)
-            messages.success(request,"Successfully login")
+            messages.success(request,"You have logged in successfully.")
             return redirect(home)
         else:
-            messages.warning(request,"Invalid username or password")
+            messages.warning(request,"Invalid username or password.Please check credentials.")
             return redirect('home')
     return HttpResponse('Not Found')
         
@@ -122,9 +134,13 @@ def writeBlog(request):
         username=request.user.get_username()
         slug  = request.POST.get('title').replace(" ","-")
         display_image = request.POST.get('display_image')
+        if len(content.split())<50:
+            print(content.split())
+            messages.success(request,"Your recipe must contain atleast 50 world")
+            return redirect('writeBlog')
         post = models.Post(title=title,content=content,author=author,slug=slug,display_image=display_image,username=username)
         post.save()
-        messages.success(request,'Thank you for writing blog,Your blog has been published successfully.')
+        messages.success(request,'Thank you for adding your recipe,Your recipe has published successfully.')
     return render(request,'home/writeBlog.html')
 
 
@@ -139,7 +155,7 @@ def deletepost(request,sno):
     print(sno)
     post.delete()
     
-    messages.success(request,"Your post has been deleted.")
+    messages.success(request,"Your post has deleted.")
     return redirect('myposts')
     
 def updatepost(request,sno):
@@ -149,7 +165,7 @@ def updatepost(request,sno):
         slug  = request.POST.get('title').replace(" ","-")
         display_image = request.POST.get('display_image')
         models.Post.objects.filter(sno=sno).update(title=title,content=content,slug=slug,display_image=display_image)
-        messages.success(request,"Your blog has been updated..")
+        messages.success(request,"Your blog has updated.")
         return redirect('myposts')
     else:
         post = models.Post.objects.filter(sno=sno).first()
@@ -157,5 +173,57 @@ def updatepost(request,sno):
         return render(request,'home/updateblog.html',context)
    
 def profile(request):
-    return render(request,"home/profile.html")     
+    if request.method=='POST':
+       myuser = request.user
+       fname = request.POST.get('fname')
+       lname = request.POST.get('lname')
+       email = request.POST.get('email')
+       if User.objects.filter(email=email).first() is not None:
+           messages.success(request,'This email has already taken please try another one.')
+           return redirect('profile')
+       try:
+            validate_email(email)
+       except ValidationError as e:
+           messages.error(request,"bad email, details.Please enter valid email address.")
+           return redirect('home')
+       try:
+           myuser.first_name = fname
+           myuser.last_name = lname
+           myuser.email = email
+           myuser.save()
+           messages.success(request,"Your profile has updated.")
+           return redirect('profile')
+       except Exception as e:
+           messages.success(request,'This username has already taken please try another one.',e)
+           return redirect('profile')
+    else:
+        user = request.user
+        context = {'user':user}
+        return render(request,"home/profile.html",context)   
+    return HttpResponse('Not Found')
+
+def changepassword(request):
+    if request.method=='POST':
+        oldpassword = request.POST.get('oldpassword') 
+        password = request.POST.get('password')
+        cpassword = request.POST.get('cpassword')
+        if len(password)<8 :
+           messages.success(request,'Password must have atleast 8 characters.')
+           return redirect('home')
+        if password != cpassword:
+            messages.success(request,'Password and Confirm Password must be same.')
+            return redirect('profile')
+        if request.user.check_password(oldpassword)!=True:
+            messages.success(request,'Old password is incorrect.')
+            return redirect('profile')
+        try:
+            request.user.set_password(password)
+            request.user.save()
+        except Exception as e:
+            print(e)
+        messages.success(request,'Your password has changed successfully.Please login again.')
+        return redirect('profile')
+        
+        
+      
     

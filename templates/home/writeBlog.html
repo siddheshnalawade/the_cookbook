@@ -20,7 +20,7 @@ Add recipe
       <label for="title" class="form-label">Display Image: </label>
        <input type="file" name="files[]" id="files" required>
       <input type="hidden" name="display_image" id="display_image" required>
-    <button type="button" class="btn btn-success" onclick="uploadimage()">Upload</button><br><br>
+    <button type="button" class="btn btn-success" onclick="alert('Image Uploading please wait.'); uploadimage()">Upload</button><br><br>
     <img alt="DisplayImagePreview" id = "preview" width = "250" height="250">
       {% comment %} <input type="text" class="form-control" name="display_image" id="display_image" required placeholder="paste image link"> {% endcomment %}
     </div>
