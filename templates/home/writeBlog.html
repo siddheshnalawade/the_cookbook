@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add recipe
+{% endblock title %}
+
+{% block nav-writeblog %}active{% endblock nav-writeblog %}
+
+{% block body %}
+
+<div class="container my-4">
+  <h4>Write your delicious recipe here.</h4>
+  <form method="post" action="/writeblog">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="title" class="form-label">Display Image: </label>
+       <input type="file" name="files[]" id="files" required>
+      <input type="hidden" name="display_image" id="display_image" required>
+    <button type="button" class="btn btn-success" onclick="uploadimage()">Upload</button><br><br>
+    <img alt="DisplayImagePreview" id = "preview" width = "250" height="250">
+      {% comment %} <input type="text" class="form-control" name="display_image" id="display_image" required placeholder="paste image link"> {% endcomment %}
+    </div>
+      <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea type="text" class="form-control" id="content" name="content"  required ></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Publish</button> 
+  </form>
+</div>
+<script src="static/ckeditor/ckeditor.js"></script>
+<script>
+  CKEDITOR.replace('content');
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+     apiKey: "AIzaSyBfb25bhuyHKBF9BXnUklfH_HPyDLAEA5w",
+    authDomain: "firstdjangowebsite.firebaseapp.com",
+    projectId: "firstdjangowebsite",
+    storageBucket: "firstdjangowebsite.appspot.com",
+    messagingSenderId: "125474027497",
+    appId: "1:125474027497:web:e05c0de075a8ba7762bd78",
+    measurementId: "G-9Y38TW55PT",
+    databaseURL:"https://firstdjangowebsite-default-rtdb.firebaseio.com/"
+  };
+  firebase.initializeApp(firebaseConfig);
+  function uploadimage(){
+  var storage = firebase.storage();
+  var file=document.getElementById("files").files[0];
+  var storageref=storage.ref();
+  var thisref=storageref.child("recipes/"+file.name).put(file);
+  thisref.on('state_changed',function(snapshot) {
+  console.log('Done');
+  
+  }, function(error) {
+  console.log('Error',error);
+  
+}, function() {
+  // Uploaded completed successfully, now we can get the download URL
+  thisref.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    console.log('File available at', downloadURL);
+    document.getElementById("display_image").value=downloadURL;
+    alert('uploaded successfuly');
+    document.getElementById("preview").src = downloadURL
+  });
+});
+}
+</script>
+{% endblock body %}

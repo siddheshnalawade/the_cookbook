@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}
+  Contact
+{% endblock title %}
+
+ {% block nav-contact  %}active{% endblock nav-contact %}
+ 
+{% block body %}
+ 
+  <div class="container my-4">
+  <h4>Contact with CookBook</h4>
+  <form method="post" action="/contact">
+  {% csrf_token %}
+  <div class="mb-3">
+    <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" name="name" id="name" required>
+  </div>
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="email" name="email" aria-describedby="email" required>
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">Phone Number</label>
+    <input type="phone" class="form-control" id="phone" name="phone" required>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Feedback/Query</label>
+    <textarea type="text" class="form-control" id="content"  name="content" required></textarea>
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+  </div>
+{% endblock body %}

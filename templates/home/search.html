@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Search Results
+{% endblock title %}
+
+{% block body %}
+<div class="container my-5">
+    <h3>Search Results:</h3>
+    {% if posts|length < 1 %}
+        Your query: <b>{{ query }}</b> not found.
+        <br>
+        Please enter valid keywords
+</div>
+     {% else %}
+    {% for post in posts %} 
+    <div class="container">
+    <div class="col-md-6">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary">{{post.author}}</strong>
+          <h3 class="mb-0">{{post.title}}</h3>
+          <div class="mb-1 text-muted">{{post.datetime}}</div>
+          <p class="card-text mb-auto">{{post.content | truncatechars:100 | striptags }}</p>
+          <a href="{{post.slug}}" class="stretched-link">Continue reading</a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+           <img class="bd-placeholder-img" width="250" height="250" src={{ post.display_image }} alt="display">
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+  {% endfor %}
+  {% endif %}
+ 
+{% endblock body %}
