@@ -80,11 +80,14 @@ WSGI_APPLICATION = 'cookbook.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dfarqfl0vkkgr2',
+        'HOST':'ec2-54-90-211-192.compute-1.amazonaws.com',
+        'PORT':5432,
+        'USER':'gwocmcizxyrssu',
+        'PASSWORD':'fd240e5492117d56b582598138ce3bd4c065983e3e55a6af14adcc972142453a',       
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
