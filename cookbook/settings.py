@@ -27,7 +27,7 @@ SECRET_KEY = 'ky(u7pd9fj=@l-p$se7=3j394buy8#o+yr!)$32is*0^uo(f7-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['recipes-cook-book.herokuapp.com','127.0.0.1']
 
 
 # Application definition
