@@ -86,11 +86,6 @@ def userSignUp(request):
            messages.success(request,'Username and Password must have atleast 8 characters.')
            return redirect('home')
        try:
-            validate_email(email)
-       except ValidationError as e:
-           messages.success(request,"bad email, details.Please enter valid email address.")
-           return redirect('home')
-       try:
            myuser = User.objects.create_user(username,email,password)
            myuser.first_name = fname
            myuser.last_name = lname
@@ -178,14 +173,10 @@ def profile(request):
        fname = request.POST.get('fname')
        lname = request.POST.get('lname')
        email = request.POST.get('email')
-       if User.objects.filter(email=email).first() is not None:
+       find  = User.objects.filter(email=email).first()
+       if find is not None and find != request.user:
            messages.success(request,'This email has already taken please try another one.')
            return redirect('profile')
-       try:
-            validate_email(email)
-       except ValidationError as e:
-           messages.error(request,"bad email, details.Please enter valid email address.")
-           return redirect('home')
        try:
            myuser.first_name = fname
            myuser.last_name = lname
