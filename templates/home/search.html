@@ -29,7 +29,7 @@ Your query: <b>{{ query }}</b> not found.
                 <div class="mb-1 text-muted">{{post.datetime}}</div>
                 <p class="card-text mb-auto">{{post.content | striptags |truncatechars:100  }}</p>
                 <div class="btn-group my-2">
-                <a href="{{post.slug}}" type="button" class="btn btn-sm btn-outline-secondary">Continue reading</a>
+                <a href="blog/{{post.slug}}" type="button" class="btn btn-sm btn-outline-secondary">Continue reading</a>
                 </div>
                 </div>
               <small class="text-muted">9 mins</small>
