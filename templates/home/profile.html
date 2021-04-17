@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock title %}
+
+{% block body %}
+
+
+<div class="container my-4">
+    <h4>Your Profile</h4>
+    <form method="post" action="/profile">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">First Name:</label>
+            <input type="text" class="form-control" value = "{{ user.first_name }}" name="fname" id="fname" required>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Last Name:</label>
+            <input type="text" class="form-control" value = "{{ user.last_name }}" name="lname" id="lname" required>
+        </div>
+        <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" aria-describedby="email" required>
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+    <button type="button" class="btn btn-danger btn-sm my-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+        Change Password
+      </button>
+</div>
+<!--Change Password-->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/changepassword">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">Old Password</label>
+                <input type="password" class="form-control"  name="oldpassword" id="oldpassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">New Password</label>
+                <input type="password" class="form-control"  name="password" id="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control"  name="cpassword" id="cpassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock body %}
