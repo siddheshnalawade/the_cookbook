@@ -20,8 +20,8 @@
     <div class="mb-3">
       <label for="title" class="form-label">Display Image: </label>
        <input type="file" name="files[]" id="files" required>
+      <input type="hidden" name="display_image" id="display_image"  value={{post.display_image}}>
       <input type="hidden" name="display_image" id="display_image">
-      <input type="hidden" name="display_image" id="display_image" required>
     <button type="button" class="btn btn-success" onclick="uploadimage()">Upload</button><br><br>
     <img src="{{post.display_image}}" id = "preview" width = "250" height="250">
     </div>
