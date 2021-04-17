@@ -122,11 +122,7 @@ def userLogin(request):
         
 def userLogout(request):
     logout(request)
-<<<<<<< HEAD
     messages.success(request,"You have logged out of CookBook!")
-=======
-    messages.success(request,"Successfully logout")
->>>>>>> 3e47fc947c4bd6e951d9eba5bc4ed2830ab19c11
     return redirect('home')
     
     
